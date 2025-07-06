@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration Form</title>
+    <!-- Google Fonts: Orbitron for headings, Lato for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0V4LLanw2q45/L2bQyTFXQyU+uTz+1w8pA9P1zJ6Lz1nE+p/b7P2z5+A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Custom CSS for styling -->
+    <style>
+        /* Keyframes for sliding up animation on form load */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(80px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Keyframes for shake animation on error messages */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        /* Keyframes for particles scattering and fading out */
+        @keyframes scatterAndFade {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.5); }
+        }
+
+        /* Keyframes for background particles floating and rotating */
+        @keyframes floatAndRotate {
+            0% {
+                opacity: 0;
+                transform: translate(var(--initial-x), var(--initial-y)) scale(var(--initial-scale)) rotate(var(--initial-rotate));
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--final-x), var(--final-y)) scale(var(--final-scale)) rotate(var(--final-rotate));
+            }
+        }
+
+        /* Glitch effect for the main heading */
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(0, 255, 255, 0.75), -0.05em -0.025em 0 rgba(255, 0, 255, 0.75), 0.025em 0.05em 0 rgba(0, 255, 0, 0.75); }
+            14% { text-shadow: 0.05em 0 0 rgba(0, 255, 255, 0.75), -0.05em -0.025em 0 rgba(255, 0, 255, 0.75), 0.025em 0.05em 0 rgba(0, 255, 0, 0.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(0, 255, 255, 0.75), 0.025em 0.05em 0 rgba(255, 0, 255, 0.75), -0.05em 0.025em 0 rgba(0, 255, 0, 0.75); }
+            49% { text-shadow: -0.05em -0.025em 0 rgba(0, 255, 255, 0.75), 0.025em 0.05em 0 rgba(255, 0, 255, 0.75), -0.05em 0.025em 0 rgba(0, 255, 0, 0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(0, 255, 255, 0.75), -0.05em 0 0 rgba(255, 0, 255, 0.75), 0.05em -0.025em 0 rgba(0, 255, 0, 0.75); }
+            99% { text-shadow: 0.025em 0.05em 0 rgba(0, 255, 255, 0.75), -0.05em 0 0 rgba(255, 0, 255, 0.75), 0.05em -0.025em 0 rgba(0, 255, 0, 0.75); }
+            100% { text-shadow: none; }
+        }
+
+        /* Scanline effect for input fields on focus */
+        @keyframes scanline {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 100%; }
+        }
+
+        /* Body background animation with radial and linear gradients */
+        @keyframes backgroundPan {
+            0% {
+                background-position: 0% 0%;
+                background: radial-gradient(at 20% 80%, rgba(20, 10, 40, 0.8) 0%, transparent 50%),
+                            radial-gradient(at 80% 20%, rgba(10, 20, 40, 0.8) 0%, transparent 50%),
+                            linear-gradient(135deg, #0A0A1A 0%, #000000 100%);
+            }
+            25% {
+                background-position: 50% 50%;
+                background: radial-gradient(at 30% 70%, rgba(20, 10, 40, 0.9) 0%, transparent 60%),
+                            radial-gradient(at 70% 30%, rgba(10, 20, 40, 0.9) 0%, transparent 60%),
+                            linear-gradient(135deg, #1A1A2A 0%, #0A0A0A 100%);
+            }
+            50% {
+                background-position: 100% 100%;
+                background: radial-gradient(at 80% 20%, rgba(20, 10, 40, 0.8) 0%, transparent 50%),
+                            radial-gradient(at 20% 80%, rgba(10, 20, 40, 0.8) 0%, transparent 50%),
+                            linear-gradient(135deg, #0A0A1A 0%, #000000 100%);
+            }
+            75% {
+                background-position: 50% 50%;
+                background: radial-gradient(at 70% 30%, rgba(20, 10, 40, 0.9) 0%, transparent 60%),
+                            radial-gradient(at 30% 70%, rgba(10, 20, 40, 0.9) 0%, transparent 60%),
+                            linear-gradient(135deg, #1A1A2A 0%, #0A0A0A 100%);
+            }
+            100% {
+                background-position: 0% 0%;
+                background: radial-gradient(at 20% 80%, rgba(20, 10, 40, 0.8) 0%, transparent 50%),
+                            radial-gradient(at 80% 20%, rgba(10, 20, 40, 0.8) 0%, transparent 50%),
+                            linear-gradient(135deg, #0A0A1A 0%, #000000 100%);
+            }
+        }
+
+        /* Pulsating border glow for the form container */
+        @keyframes borderPulse {
+            0% {
+                box-shadow: 0 15px 70px rgba(0, 255, 255, 0.5), /* Cyan main glow */
+                            0 0 0 4px rgba(255, 0, 255, 0.7), /* Magenta inner border */
+                            inset 0 0 25px rgba(0, 255, 255, 0.3), /* Inner cyan glow */
+                            inset 0 0 40px rgba(255, 0, 255, 0.2); /* Deeper inner magenta glow */
+            }
+            50% {
+                box-shadow: 0 18px 80px rgba(0, 255, 255, 0.7), /* Slightly brighter */
+                            0 0 0 5px rgba(255, 0, 255, 0.8), /* Slightly thicker */
+                            inset 0 0 30px rgba(0, 255, 255, 0.4),
+                            inset 0 0 50px rgba(255, 0, 255, 0.3);
+            }
+            100% {
+                box-shadow: 0 15px 70px rgba(0, 255, 255, 0.5),
+                            0 0 0 4px rgba(255, 0, 255, 0.7),
+                            inset 0 0 25px rgba(0, 255, 255, 0.3),
+                            inset 0 0 40px rgba(255, 0, 255, 0.2);
+            }
+        }
+
+        /* Button pulse glow for primary button on active */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 50px rgba(0, 255, 255, 0.6); }
+            100% { box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4); }
+        }
+
+        /* Button pulse glow for secondary button on active */
+        @keyframes pulseGlowSecondary {
+            0% { box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.3), 0 0 50px rgba(255, 255, 255, 0.2); }
+            100% { box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2); }
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: radial-gradient(at 20% 80%, rgba(20, 10, 40, 0.8) 0%, transparent 50%),
+                        radial-gradient(at 80% 20%, rgba(10, 20, 40, 0.8) 0%, transparent 50%),
+                        linear-gradient(135deg, #0A0A1A 0%, #000000 100%);
+            background-size: 300% 300%;
+            animation: backgroundPan 40s ease-in-out infinite alternate;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* This centers the content vertically */
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #E0FFFF;
+            position: relative;
+            overflow-y: auto; /* Added for vertical scrolling if content is too long */
+        }
+
+        /* Background grid pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(90deg, rgba(0, 255, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(0, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.6;
+            z-index: -2;
+            animation: moveGrid 15s linear infinite;
+        }
+        @keyframes moveGrid {
+            from { background-position: 0 0; }
+            to { background-position: 40px 40px; }
+        }
+
+        /* Animated Background Particles Container */
+        #animatedBackground {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+            transition: transform 0.3s ease-out;
+        }
+
+        .bg-particle {
+            position: absolute;
+            background-color: currentColor;
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 12px currentColor;
+            animation: floatAndRotate var(--duration) ease-in-out infinite alternate var(--delay);
+        }
+
+        .form-container {
+            background-color: rgba(15, 15, 25, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 50px;
+            border-radius: 25px;
+            box-shadow: 0 15px 70px rgba(0, 255, 255, 0.5),
+                        0 0 0 4px rgba(255, 0, 255, 0.7),
+                        inset 0 0 25px rgba(0, 255, 255, 0.3),
+                        inset 0 0 40px rgba(255, 0, 255, 0.2);
+            max-width: 700px;
+            width: 100%;
+            box-sizing: border-box;
+            animation: slideInUp 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards, borderPulse 3s infinite ease-in-out; /* Re-added borderPulse */
+            position: relative;
+            overflow: hidden;
+            border: 3px solid rgba(0, 255, 255, 0.15);
+            transform-style: preserve-3d;
+            z-index: 1;
+            transition: box-shadow 0.4s ease-out, transform 0.4s ease-out;
+            transform: perspective(1000px) rotateX(3deg) rotateY(-3deg) scale(0.97);
+        }
+        .form-container:hover {
+            box-shadow: 0 25px 90px rgba(0, 255, 255, 0.8),
+                        0 0 0 6px rgba(255, 0, 255, 0.9),
+                        inset 0 0 35px rgba(0, 255, 255, 0.4),
+                        inset 0 0 60px rgba(255, 0, 255, 0.3);
+            transform: perspective(1000px) translateY(-10px) rotateX(0deg) rotateY(0deg) scale(1.03); /* Re-added 3D transform */
+        }
+
+        /* Pseudo-element for unique corner graphic */
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            right: -25px;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #FF00FF, #00FFFF);
+            border-radius: 0 30px 0 30px;
+            box-shadow: 0 8px 25px rgba(255, 0, 255, 0.5);
+            transform: rotate(45deg);
+            z-index: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 35px 25px;
+                border-radius: 15px;
+                margin-top: 30px;
+                margin-bottom: 30px;
+            }
+            h2 {
+                font-size: 2rem;
+                margin-bottom: 30px;
+            }
+            .form-control {
+                padding: 14px 15px; /* Adjusted padding */
+                font-size: 0.95em;
+            }
+            .btn-primary, .btn-secondary {
+                padding: 14px 20px;
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 25px 15px;
+                border-radius: 10px;
+                box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2), 0 0 0 1px rgba(0, 255, 255, 0.3);
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            h2 {
+                font-size: 1.7rem;
+                margin-bottom: 25px;
+            }
+            .form-group {
+                margin-bottom: 25px;
+            }
+            .form-label-floating {
+                font-size: 0.85em;
+                left: 0; /* Adjusted for static label */
+                padding: 0; /* Removed padding */
+                background-color: transparent; /* Removed background */
+            }
+            .form-control {
+                padding: 12px 12px; /* Adjusted padding */
+            }
+            .error-message, .strength-text {
+                font-size: 0.75em;
+            }
+            .clear-input-btn, .valid-checkmark { /* Removed password-toggle */
+                font-size: 0.9em;
+            }
+            .clear-input-btn { right: 40px; }
+            .valid-checkmark { right: 12px; }
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00FFFF;
+            text-align: center;
+            margin-bottom: 45px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 25px rgba(0, 255, 255, 0.6);
+            position: relative;
+            z-index: 1;
+            animation: glitch 1s infinite alternate linear; /* Re-added glitch animation */
+            transition: text-shadow 0.3s ease-in-out;
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 35px;
+        }
+        .form-input-wrapper {
+            position: relative; /* Keep relative for icons inside */
+            z-index: 1;
+            transition: box-shadow 0.3s ease-out, transform 0.2s ease-out; /* Re-added transform transition */
+            border-radius: 15px;
+            margin-right: 40px;
+        }
+        .form-input-wrapper:hover {
+            box-shadow: 3.7cap 0 0 0 rgba(128, 255, 255, 1.3), /* Softer cyan glow on hover */
+                        inset 0 0 15px rgba(128, 255, 255, 0.1); /* Diffused inner glow on hover */
+            transform: translateY(-5px) scale(1.01); /* Re-added transform for hover */
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px; /* Adjusted padding for static label */
+            background-color: rgba(25, 25, 40, 0.7); /* Softer translucent dark background */
+            border: 2px solid rgba(128, 255, 255, 0.2); /* Softer border */
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 1.1em;
+            color: #E0FFFF;
+            text-shadow: 0 0 6px rgba(224, 255, 255, 0.3);
+            box-shadow: inset 0 0 8px rgba(128, 255, 255, 0.1); /* Diffused inner glow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .form-control:focus {
+            border-color: rgba(0, 255, 255, 0.8); /* Brighter, but still soft cyan border */
+            outline: none;
+            box-shadow: 0 0 0 6px rgba(0, 255, 255, 0.4), /* Outer glow */
+                        inset  0 0 20px rgba(0, 255, 255, 0.3); /* Inner glow */
+            background-color: rgba(25, 25, 40, 0.9); /* Slightly more opaque background on focus */
+            transform: scale(1.01);
+            text-shadow: 0 0 12px rgba(224, 255, 255, 0.6); /* Stronger text glow on focus */
+            background-image: linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px); /* Re-added scanline texture */
+            background-size: 100% 25px;
+            animation: scanline 0.6s infinite linear; /* Re-added scanline animation */
+        }
+
+        /* Static Label Styles */
+        .form-label-floating {
+            position: static; /* Make it static */
+            display: block; /* Make it a block element */
+            margin-bottom: 8px; /* Space between label and input */
+            left: auto; /* Reset left */
+            top: auto; /* Reset top */
+            transform: none; /* Remove transform */
+            color: #A8E8EE; /* Default label color */
+            pointer-events: none;
+            transition: color 0.3s ease, text-shadow 0.3s ease; /* Keep transitions for color/shadow */
+            font-size: 1em;
+            z-index: 2;
+            text-shadow: 0 0 8px rgba(168, 232, 238, 0.4); /* Subtle initial glow for label */
+            font-weight: 400;
+            padding: 0; /* Remove padding */
+            background-color: transparent; /* Remove background */
+        }
+
+        /* Remove floating label specific rules */
+        /* .form-control:focus + .form-label-floating, */
+        /* .form-control:not(:placeholder-shown) + .form-label-floating { */
+            /* These rules are no longer needed */
+        /* } */
+        .form-control:not(:placeholder-shown) {
+            padding-top: 15px; /* Keep consistent padding */
+            padding-bottom: 15px;
+        }
+
+        /* Validation Feedback Styles */
+        .form-control.is-invalid {
+            border-color: #FF33CC;
+            box-shadow: 0 0 0 5px rgba(255, 51, 204, 0.3), inset 0 0 10px rgba(255, 51, 204, 0.2); /* Softer invalid glow */
+        }
+        .form-control.is-valid {
+            border-color: #33FF33;
+            box-shadow: 0 0 0 5px rgba(51, 255, 51, 0.3), inset 0 0 10px rgba(51, 255, 51, 0.2); /* Softer valid glow */
+        }
+
+        .error-message {
+            color: #FF33CC;
+            font-size: 0.95em;
+            margin-top: 18px; /* Increased margin-top for more space */
+            display: block;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 6px rgba(255, 51, 204, 0.6);
+        }
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+            animation: shake 0.3s ease-in-out;
+        }
+
+        .btn-primary, .btn-secondary {
+            border: none;
+            border-radius: 18px;
+            padding: 20px 40px;
+            font-size: 1.3em;
+            font-weight: 700;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 100%;
+            margin-top: 30px;
+            transform: scale(1);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Button hover background overlay (digital ripple) */
+        .btn-primary::before, .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 255, 255, 0.15);
+            transform: translateX(-100%);
+            transition: transform 0.4s ease-out;
+            z-index: -1;
+        }
+
+        .btn-primary:hover::before, .btn-secondary:hover::before {
+            transform: translateX(0);
+        }
+
+        .btn-primary {
+            background-image: linear-gradient(to right, #00BFFF, #00FFFF);
+            color: #0A0A1A;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 35px rgba(0, 255, 255, 0.5);
+        }
+        .btn-primary:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(0, 255, 255, 0.8);
+            background-image: linear-gradient(to right, #1E90FF, #00DCDC);
+        }
+        .btn-primary:active {
+            transform: translateY(0) scale(0.97);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            background-image: linear-gradient(to right, #0099CC, #00AAAA);
+            animation: pulseGlow 0.3s forwards;
+        }
+
+        .btn-secondary {
+            background-color: #2A2A3A;
+            color: #E0FFFF;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-secondary:hover {
+            background-color: #3A3A4A;
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+        }
+        .btn-secondary:active {
+            transform: translateY(0) scale(0.97);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background-color: #1A1A2A;
+            animation: pulseGlowSecondary 0.3s forwards;
+        }
+
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #33FF33, #00CC00);
+            color: #0A0A1A;
+            padding: 35px 45px;
+            border-radius: 25px;
+            box-shadow: 0 12px 35px rgba(51,255,51,0.45);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.6s;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+            border: 2px solid rgba(51,255,51,0.6);
+        }
+        .message-box.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Styles for clear input, and valid checkmark (password-toggle removed) */
+        .clear-input-btn, .valid-checkmark {
+            position: absolute;
+            top: 45%; /* Adjusted to 45% */
+            transform: translateY(-50%) scale(1);
+            cursor: pointer;
+            color: #80FFFF;
+            transition: all 0.2s ease-out;
+            font-size: 1.3em;
+            z-index: 4;
+            display: none;
+        }
+        .clear-input-btn:hover, .valid-checkmark:hover {
+            transform: translateY(-50%) scale(1.4);
+            color: #00FFFF;
+        }
+        .clear-input-btn:hover {
+            color: #FF33CC;
+        }
+        .valid-checkmark:hover {
+            color: #33FF33;
+        }
+        /* Password toggle specific rules removed */
+        /* .password-toggle {
+            right: 20px;
+        } */
+        .clear-input-btn {
+            right: 20px; /* Adjusted to be the primary right-aligned icon */
+            color: #FF33CC;
+        }
+        .valid-checkmark {
+            right: 20px;
+            color: #33FF33;
+            font-size: 1.6em;
+            cursor: default;
+        }
+
+        /* Show/hide logic for icons */
+        .form-control:not(:placeholder-shown) ~ .clear-input-btn,
+        .form-control:not([value=""]) ~ .clear-input-btn {
+            display: block;
+        }
+        .form-control.is-valid ~ .valid-checkmark {
+            display: block;
+        }
+        .valid-checkmark.show ~ .clear-input-btn {
+            display: none;
+        }
+        /* Password toggle specific show/hide rules removed */
+        /* .password-input-group #password:not([value=""]) ~ #togglePassword:not(.hide),
+        .password-input-group #confirmPassword:not([value=""]) ~ #toggleConfirmPassword:not(.hide) {
+            display: block;
+        }
+        .password-input-group .form-control.is-valid ~ #togglePassword,
+        .password-input-group .form-control.is-valid ~ #toggleConfirmPassword {
+            display: none;
+        } */
+
+        /* Styles for password strength meter */
+        .password-strength-meter {
+            height: 14px;
+            background-color: #1A1A2A;
+            border-radius: 7px;
+            margin-top: 15px;
+            overflow: hidden;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #ccc;
+            border-radius: 7px;
+            transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
+        }
+        .strength-bar.weak { background-color: #FF33CC; }
+        .strength-bar.medium { background-color: #FFFF33; }
+        .strength-bar.strong { background-color: #33FF33; }
+        .strength-text {
+            font-size: 1em;
+            text-align: right;
+            margin-top: 12px;
+            color: #80FFFF;
+            transition: color 0.3s ease;
+            font-weight: 600;
+        }
+
+        /* Success Burst Animation Container */
+        .success-burst-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1001;
+            overflow: hidden;
+        }
+        .burst-particle {
+            position: absolute;
+            background-color: currentColor;
+            border-radius: 50%;
+            opacity: 0;
+            animation: scatterAndFade 1.8s forwards ease-out;
+            box-shadow: 0 0 10px currentColor;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background Particles Container -->
+    <div id="animatedBackground"></div>
+
+    <div class="form-container">
+        <h2>User Registration</h2>
+        <form id="registrationForm" novalidate>
+            <!-- Full Name Field -->
+            <div class="form-group">
+                <label for="fullName" class="form-label-floating">Full Name</label>
+                <div class="form-input-wrapper">
+                    <input type="text" class="form-control" id="fullName">
+                    <span class="clear-input-btn" data-input-id="fullName" title="Clear Full Name"><i class="fas fa-times-circle"></i></span>
+                    <span class="valid-checkmark" data-input-id="fullName" title="Valid Input"><i class="fas fa-check-circle"></i></span>
+                </div>
+                <span id="fullNameError" class="error-message"></span>
+            </div>
+
+            <!-- Email ID Field -->
+            <div class="form-group">
+                <label for="email" class="form-label-floating">Email ID</label>
+                <div class="form-input-wrapper">
+                    <input type="email" class="form-control" id="email">
+                    <span class="clear-input-btn" data-input-id="email" title="Clear Email ID"><i class="fas fa-times-circle"></i></span>
+                    <span class="valid-checkmark" data-input-id="email" title="Valid Input"><i class="fas fa-check-circle"></i></span>
+                </div>
+                <span id="emailError" class="error-message"></span>
+            </div>
+
+            <!-- Phone Number Field -->
+            <div class="form-group">
+                <label for="phoneNumber" class="form-label-floating">Phone Number</label>
+                <div class="form-input-wrapper">
+                    <input type="tel" class="form-control" id="phoneNumber">
+                    <span class="clear-input-btn" data-input-id="phoneNumber" title="Clear Phone Number"><i class="fas fa-times-circle"></i></span>
+                    <span class="valid-checkmark" data-input-id="phoneNumber" title="Valid Input"><i class="fas fa-check-circle"></i></span>
+                </div>
+                <span id="phoneNumberError" class="error-message"></span>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password" class="form-label-floating">Password</label>
+                <div class="form-input-wrapper password-input-group">
+                    <input type="password" class="form-control" id="password">
+                    <span class="clear-input-btn" data-input-id="password" title="Clear Password"><i class="fas fa-times-circle"></i></span>
+                    <span class="valid-checkmark" data-input-id="password" title="Valid Input"><i class="fas fa-check-circle"></i></span>
+                </div>
+                <div class="password-strength-meter">
+                    <div class="strength-bar" id="passwordStrengthBar"></div>
+                </div>
+                <span class="strength-text" id="passwordStrengthText"></span>
+                <span id="passwordError" class="error-message"></span>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="form-group">
+                <label for="confirmPassword" class="form-label-floating">Confirm Password</label>
+                <div class="form-input-wrapper password-input-group">
+                    <input type="password" class="form-control" id="confirmPassword">
+                    <span class="clear-input-btn" data-input-id="confirmPassword" title="Clear Confirm Password"><i class="fas fa-times-circle"></i></span>
+                    <span class="valid-checkmark" data-input-id="confirmPassword" title="Valid Input"><i class="fas fa-check-circle"></i></span>
+                </div>
+                <span id="confirmPasswordError" class="error-message"></span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Register</button>
+            <!-- Clear Form Button -->
+            <button type="button" class="btn btn-secondary" id="clearFormBtn">Clear Form</button>
+        </form>
+    </div>
+
+    <!-- Message Box for success/error messages -->
+    <div id="messageBox" class="message-box"></div>
+
+    <!-- Success Burst Animation Container -->
+    <div id="successBurstContainer" class="success-burst-container"></div>
+
+    <script>
+        // Get references to form elements and error message spans
+        const registrationForm = document.getElementById('registrationForm');
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+
+        const fullNameError = document.getElementById('fullNameError');
+        const emailError = document.getElementById('emailError');
+        const phoneNumberError = document.getElementById('phoneNumberError');
+        const passwordError = document.getElementById('passwordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+        const messageBox = document.getElementById('messageBox');
+        // Removed password toggle elements
+        // const togglePassword = document.getElementById('togglePassword');
+        // const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const clearFormBtn = document.getElementById('clearFormBtn');
+
+        const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+        const passwordStrengthText = document.getElementById('passwordStrengthText');
+
+        const allInputs = document.querySelectorAll('.form-control');
+        const allClearButtons = document.querySelectorAll('.clear-input-btn');
+        const allValidCheckmarks = document.querySelectorAll('.valid-checkmark');
+        const successBurstContainer = document.getElementById('successBurstContainer');
+        const animatedBackground = document.getElementById('animatedBackground');
+
+
+        // Map input ID to its error message element
+        const inputErrorMap = {
+            fullName: fullNameError,
+            email: emailError,
+            phoneNumber: phoneNumberError,
+            password: passwordError,
+            confirmPassword: confirmPasswordError
+        };
+
+        // Map input ID to its checkmark element
+        const inputCheckmarkMap = {};
+        allValidCheckmarks.forEach(checkmark => {
+            inputCheckmarkMap[checkmark.dataset.inputId] = checkmark;
+        });
+
+        // Map input ID to its clear button element
+        const inputClearBtnMap = {};
+        allClearButtons.forEach(btn => {
+            inputClearBtnMap[btn.dataset.inputId] = btn;
+        });
+
+        /**
+         * Shows an error message for a given input field.
+         * Also adds 'is-invalid' class and removes 'is-valid' class.
+         * Adds 'show' class to error message for animation.
+         * Hides the valid checkmark if visible.
+         * @param {HTMLElement} inputElement - The input field element.
+         * @param {HTMLElement} errorElement - The span element to display the error.
+         * @param {string} message - The error message to display.
+         */
+        function showError(inputElement, errorElement, message) {
+            inputElement.classList.add('is-invalid');
+            inputElement.classList.remove('is-valid');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+
+            // Hide checkmark if this field is now invalid
+            const checkmark = inputCheckmarkMap[inputElement.id];
+            if (checkmark) {
+                checkmark.classList.remove('show');
+                checkmark.style.display = 'none';
+            }
+            // Removed password toggle hide logic
+            // if (inputElement.id === 'password' && togglePassword) {
+            //      togglePassword.style.display = 'none';
+            // }
+            // if (inputElement.id === 'confirmPassword' && toggleConfirmPassword) {
+            //     toggleConfirmPassword.style.display = 'none';
+            // }
+        }
+
+        /**
+         * Clears an error message for a given input field.
+         * Also adds 'is-valid' class and removes 'is-invalid' class.
+         * Removes 'show' class from error message to trigger animation.
+         * Shows the valid checkmark if the input has content and is valid.
+         * @param {HTMLElement} inputElement - The input field element.
+         * @param {HTMLElement} errorElement - The span element displaying the error.
+         */
+        function clearError(inputElement, errorElement) {
+            inputElement.classList.remove('is-invalid');
+            const checkmark = inputCheckmarkMap[inputElement.id];
+
+            if (inputElement.value.trim() !== '') {
+                inputElement.classList.add('is-valid');
+                if (checkmark) {
+                    checkmark.style.display = 'block';
+                    checkmark.classList.add('show');
+                }
+                // Removed password toggle show logic
+                // if (inputElement.id === 'password' && togglePassword) {
+                //      togglePassword.style.display = 'block';
+                // }
+                // if (inputElement.id === 'confirmPassword' && toggleConfirmPassword) {
+                //     toggleConfirmPassword.style.display = 'block';
+                // }
+            } else {
+                inputElement.classList.remove('is-valid');
+                if (checkmark) {
+                    checkmark.classList.remove('show');
+                    checkmark.style.display = 'none';
+                }
+                 // Removed password toggle hide logic
+                // if (inputElement.id === 'password' && togglePassword) {
+                //      togglePassword.style.display = 'none';
+                // }
+                // if (inputElement.id === 'confirmPassword' && toggleConfirmPassword) {
+                //     toggleConfirmPassword.style.display = 'none';
+                // }
+            }
+            errorElement.classList.remove('show');
+            setTimeout(() => {
+                errorElement.textContent = '';
+            }, 300);
+        }
+
+        /**
+         * Shows a general message in a floating box.
+         * @param {string} message - The message to display.
+         * @param {string} type - 'success' or 'error' to set background color.
+         */
+        function showMessageBox(message, type = 'success') {
+            messageBox.textContent = message;
+            messageBox.style.backgroundColor = type === 'success' ? '#33FF33' : '#FF33CC';
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000);
+        }
+
+        /**
+         * Triggers a simple success burst animation.
+         * Creates multiple small, colored particles that scatter and fade.
+         * @param {Event} event - The click event from which to get coordinates.
+         */
+        function triggerSuccessBurst(event) {
+            // Updated colors for burst to match the new theme
+            const colors = ['#00FFFF', '#33FF33', '#FF33CC', '#FFFF33', '#E0FFFF'];
+            const numParticles = 60;
+            const clickX = event.clientX;
+            const clickY = event.clientY;
+
+            // Clear previous particles
+            successBurstContainer.innerHTML = '';
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('burst-particle');
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random size
+                const size = Math.random() * 18 + 10;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // Initial position at click point
+                particle.style.left = `${clickX}px`;
+                particle.style.top = `${clickY}px`;
+
+                // Random target position (scatter effect)
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 300 + 150;
+                const targetX = distance * Math.cos(angle);
+                const targetY = distance * Math.sin(angle);
+
+                particle.style.setProperty('--x', `${targetX}px`);
+                particle.style.setProperty('--y', `${targetY}px`);
+
+                successBurstContainer.appendChild(particle);
+
+                // Remove particle after its animation
+                particle.addEventListener('animationend', () => {
+                    particle.remove();
+                });
+            }
+        }
+
+        /**
+         * Creates and animates background particles.
+         */
+        function createBackgroundParticles() {
+            const particleColors = ['#00FFFF', '#33FF33', '#FF33CC', '#FFFF33', '#80FFFF', '#E0FFFF'];
+            const numParticles = 80;
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('bg-particle');
+                particle.style.backgroundColor = particleColors[Math.floor(Math.random() * particleColors.length)];
+
+                const size = Math.random() * 30 + 8;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                const initialX = Math.random() * window.innerWidth;
+                const initialY = Math.random() * window.innerHeight;
+                particle.style.left = `${initialX}px`;
+                particle.style.top = `${initialY}px`;
+
+                // Define animation properties for each particle
+                const duration = Math.random() * 25 + 20;
+                const delay = Math.random() * 18;
+                const initialScale = Math.random() * 0.6 + 0.6;
+                const finalScale = Math.random() * 0.6 + 1.2;
+                const initialRotate = Math.random() * 360;
+                const finalRotate = initialRotate + (Math.random() > 0.5 ? 1080 : -1080);
+
+                // Random movement range
+                const moveRangeX = Math.random() * 400 - 200;
+                const moveRangeY = Math.random() * 400 - 200;
+
+                particle.style.setProperty('--duration', `${duration}s`);
+                particle.style.setProperty('--delay', `${delay}s`);
+                particle.style.setProperty('--initial-x', `${initialX}px`);
+                particle.style.setProperty('--initial-y', `${initialY}px`);
+                particle.style.setProperty('--final-x', `${initialX + moveRangeX}px`);
+                particle.style.setProperty('--final-y', `${initialY + moveRangeY}px`);
+                particle.style.setProperty('--initial-scale', initialScale);
+                particle.style.setProperty('--final-scale', finalScale);
+                particle.style.setProperty('--initial-rotate', `${initialRotate}deg`);
+                particle.style.setProperty('--final-rotate', `${finalRotate}deg`);
+
+                animatedBackground.appendChild(particle);
+            }
+        }
+
+        // --- Mouse Parallax Effect ---
+        let mouseX = 0;
+        let mouseY = 0;
+        let bgOffsetX = 0;
+        let bgOffsetY = 0;
+        const parallaxStrength = 0.05;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Calculate offset based on mouse position relative to screen center
+            bgOffsetX = ((mouseX - window.innerWidth / 2) * parallaxStrength);
+            bgOffsetY = ((mouseY - window.innerHeight / 2) * parallaxStrength);
+
+            // Apply transform to the background container
+            animatedBackground.style.transform = `translate(${bgOffsetX}px, ${bgOffsetY}px)`;
+        });
+
+        /**
+         * Toggles the visibility of a password input field.
+         * @param {HTMLInputElement} passwordInput - The password input field.
+         * @param {HTMLElement} toggleIcon - The eye icon element.
+         */
+        /* Removed function as it's no longer needed
+        function togglePasswordVisibility(passwordInput, toggleIcon) {
+            const icon = toggleIcon.querySelector('i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        }
+        */
+
+        // --- Validation Functions ---
+
+        function validateFullName() {
+            const fullName = fullNameInput.value.trim();
+            if (fullName.length < 5) {
+                showError(fullNameInput, fullNameError, 'Full Name must be at least 5 characters long.');
+                return false;
+            } else {
+                clearError(fullNameInput, fullNameError);
+                return true;
+            }
+        }
+
+        function validateEmail() {
+            const email = emailInput.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError(emailInput, emailError, 'Enter a correct email ID (e.g., example@domain.com).');
+                return false;
+            } else {
+                clearError(emailInput, emailError);
+                return true;
+            }
+        }
+
+        function validatePhoneNumber() {
+            const phoneNumber = phoneNumberInput.value.trim();
+            const phoneRegex = /^\d{10}$/;
+
+            if (!phoneRegex.test(phoneNumber)) {
+                showError(phoneNumberInput, phoneNumberError, 'Phone Number must be a 10-digit number.');
+                return false;
+            } else if (phoneNumber === '1234567890') {
+                showError(phoneNumberInput, phoneNumberError, 'Phone Number cannot be 1234567890.');
+                return false;
+            } else {
+                clearError(phoneNumberInput, phoneNumberError);
+                return true;
+            }
+        }
+
+        function validatePassword() {
+            const password = passwordInput.value;
+            const fullName = fullNameInput.value.trim().toLowerCase();
+
+            if (password.length < 8) {
+                showError(passwordInput, passwordError, 'Password must be at least 8 characters long.');
+                return false;
+            } else if (password.toLowerCase() === 'password') {
+                showError(passwordInput, passwordError, 'Password cannot be "password".');
+                return false;
+            } else if (fullName && password.toLowerCase().includes(fullName) && fullName.length > 0) {
+                showError(passwordInput, passwordError, 'Password cannot contain your full name.');
+                return false;
+            } else {
+                clearError(passwordInput, passwordError);
+                return true;
+            }
+        }
+
+        function validateConfirmPassword() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (confirmPassword === '') {
+                 showError(confirmPasswordInput, confirmPasswordError, 'Confirm your password.');
+                 return false;
+            } else if (password !== confirmPassword) {
+                showError(confirmPasswordInput, confirmPasswordError, 'Passwords do not match.');
+                return false;
+            } else {
+                clearError(confirmPasswordInput, confirmPasswordError);
+                return true;
+            }
+        }
+
+        function checkPasswordStrength() {
+            const password = passwordInput.value;
+            let strength = 0;
+
+            if (password.length >= 8) strength += 20;
+            if (password.match(/[a-z]/)) strength += 20;
+            if (password.match(/[A-Z]/)) strength += 20;
+            if (password.match(/[0-9]/)) strength += 20;
+            if (password.match(/[^a-zA-Z0-9]/)) strength += 20;
+
+            passwordStrengthBar.style.width = strength + '%';
+            passwordStrengthBar.classList.remove('weak', 'medium', 'strong');
+
+            if (strength <= 40) {
+                passwordStrengthBar.classList.add('weak');
+                passwordStrengthText.textContent = 'Weak';
+                passwordStrengthText.style.color = '#FF33CC';
+            } else if (strength <= 80) {
+                passwordStrengthBar.classList.add('medium');
+                passwordStrengthText.textContent = 'Medium';
+                passwordStrengthText.style.color = '#FFFF33';
+            } else {
+                passwordStrengthBar.classList.add('strong');
+                passwordStrengthText.textContent = 'Strong';
+                passwordStrengthText.style.color = '#33FF33';
+            }
+
+            if (password.length === 0) {
+                passwordStrengthBar.style.width = '0%';
+                passwordStrengthText.textContent = '';
+                passwordStrengthBar.classList.remove('weak', 'medium', 'strong');
+            }
+        }
+
+        // --- Event Listeners ---
+
+        // Add 'input' event listeners for real-time validation feedback and clear buttons
+        allInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                // Call validation function based on input ID
+                let isValid;
+                switch (input.id) {
+                    case 'fullName': isValid = validateFullName(); break;
+                    case 'email': isValid = validateEmail(); break;
+                    case 'phoneNumber': isValid = validatePhoneNumber(); break;
+                    case 'password':
+                        isValid = validatePassword();
+                        // Only show strength if basic validation passes
+                        if (isValid) {
+                            checkPasswordStrength();
+                            // Removed password toggle show logic
+                            // if (togglePassword) togglePassword.style.display = 'block';
+                        } else {
+                            passwordStrengthBar.style.width = '0%';
+                            passwordStrengthText.textContent = '';
+                            passwordStrengthBar.classList.remove('weak', 'medium', 'strong');
+                            // Removed password toggle hide logic
+                            // if (togglePassword) togglePassword.style.display = 'none';
+                        }
+                        validateConfirmPassword(); // Confirm password needs to be re-validated if password changes
+                        break;
+                    case 'confirmPassword':
+                        isValid = validateConfirmPassword();
+                        // Removed password toggle show/hide logic
+                        // if (isValid && toggleConfirmPassword) toggleConfirmPassword.style.display = 'block';
+                        // else if (!isValid && toggleConfirmPassword) toggleConfirmPassword.style.display = 'none';
+                        break;
+                    default: isValid = true;
+                }
+
+                // Show/hide clear button and checkmark
+                const clearBtn = inputClearBtnMap[input.id];
+                const checkmark = inputCheckmarkMap[input.id];
+                // Removed password input check for toggle icon
+                // const isPasswordInput = (input.id === 'password' || input.id === 'confirmPassword');
+                // const toggleIcon = isPasswordInput ? (input.id === 'password' ? togglePassword : toggleConfirmPassword) : null;
+
+                if (input.value.trim() !== '') {
+                    if (clearBtn) {
+                        clearBtn.style.display = 'block';
+                        // Adjust clear button position based on other icons' visibility
+                        let rightOffset = 20;
+
+                        // Check if a checkmark is visible
+                        if (checkmark && checkmark.classList.contains('show')) {
+                            rightOffset = (checkmark.offsetWidth || 24) + 15;
+                        }
+                        // Removed password toggle positioning logic
+                        // else if (isPasswordInput && toggleIcon && toggleIcon.style.display === 'block') {
+                        //     rightOffset = (toggleIcon.offsetWidth || 24) + 15;
+                        // }
+                        clearBtn.style.right = rightOffset + 'px';
+                    }
+
+                    if (isValid && checkmark) {
+                        checkmark.style.display = 'block';
+                        checkmark.classList.add('show');
+                        // If checkmark is shown for non-password fields, hide clear button
+                        // Now clear button should always be hidden if checkmark is shown, regardless of password field
+                        if (clearBtn) {
+                            clearBtn.style.display = 'none';
+                        }
+                    } else if (checkmark) {
+                        checkmark.classList.remove('show');
+                        checkmark.style.display = 'none';
+                    }
+
+                } else {
+                    // Input is empty, hide all related icons
+                    if (clearBtn) clearBtn.style.display = 'none';
+                    if (checkmark) {
+                        checkmark.classList.remove('show');
+                        checkmark.style.display = 'none';
+                    }
+                    // Removed toggleIcon hide logic
+                    // if (toggleIcon) toggleIcon.style.display = 'none';
+                }
+            });
+            // Trigger input event once on load to set initial state correctly
+            input.dispatchEvent(new Event('input'));
+        });
+
+
+        // Add click event listeners for individual clear input buttons
+        allClearButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const inputId = btn.dataset.inputId;
+                const inputElement = document.getElementById(inputId);
+                if (inputElement) {
+                    inputElement.value = '';
+                    inputElement.dispatchEvent(new Event('input'));
+                    inputElement.focus();
+                }
+            });
+        });
+
+
+        // Removed event listeners for password toggles
+        // togglePassword.addEventListener('click', () => togglePasswordVisibility(passwordInput, togglePassword));
+        // toggleConfirmPassword.addEventListener('click', () => togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword));
+
+        // Add event listener for Clear Form button (main form clear)
+        clearFormBtn.addEventListener('click', () => {
+            registrationForm.reset();
+            // Clear all validation states and error messages
+            allInputs.forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+                input.blur();
+                // Ensure floating labels reset correctly: set placeholder to space and trigger re-evaluation
+                input.placeholder = ' '; // This is now redundant but harmless
+                // Forcing re-evaluation of floating label by blurring then focusing then blurring
+                input.focus();
+                input.blur();
+
+                // Hide all clear buttons and checkmarks for this input
+                const clearBtn = inputClearBtnMap[input.id];
+                const checkmark = inputCheckmarkMap[input.id];
+                if (clearBtn) clearBtn.style.display = 'none';
+                if (checkmark) {
+                    checkmark.classList.remove('show');
+                    checkmark.style.display = 'none';
+                }
+            });
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(error => {
+                error.classList.remove('show');
+                setTimeout(() => {
+                    error.textContent = '';
+                }, 300);
+            });
+            // Reset password strength meter
+            passwordStrengthBar.style.width = '0%';
+            passwordStrengthBar.classList.remove('weak', 'medium', 'strong');
+            passwordStrengthText.textContent = '';
+            // Removed eye icons reset logic
+            // if (togglePassword) {
+            //     togglePassword.querySelector('i').classList.remove('fa-eye');
+            //     togglePassword.querySelector('i').classList.add('fa-eye-slash');
+            // }
+            // if (toggleConfirmPassword) {
+            //     toggleConfirmPassword.querySelector('i').classList.remove('fa-eye');
+            //     toggleConfirmPassword.querySelector('i').classList.add('fa-eye-slash');
+            // }
+            passwordInput.setAttribute('type', 'password');
+            confirmPasswordInput.setAttribute('type', 'password');
+
+            // Removed password toggles hide logic
+            // if (togglePassword) togglePassword.style.display = 'none';
+            // if (toggleConfirmPassword) toggleConfirmPassword.style.display = 'none';
+        });
+
+
+        /**
+         * Handles the form submission event.
+         * Calls all validation functions and prevents form submission if any validation fails.
+         * @param {Event} event - The form submission event.
+         */
+        registrationForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const isFullNameValid = validateFullName();
+            const isEmailValid = validateEmail();
+            const isPhoneNumberValid = validatePhoneNumber();
+            const isPasswordValid = validatePassword();
+            const isConfirmPasswordValid = validateConfirmPassword();
+
+            if (isFullNameValid && isEmailValid && isPhoneNumberValid && isPasswordValid && isConfirmPasswordValid) {
+                showMessageBox('Form submitted successfully!', 'success');
+                triggerSuccessBurst(event);
+
+                console.log('Form data:', {
+                    fullName: fullNameInput.value,
+                    email: emailInput.value,
+                    phoneNumber: phoneNumberInput.value,
+                });
+                registrationForm.reset();
+                // Clear all valid/invalid states and error messages after successful submission
+                allInputs.forEach(input => {
+                    input.classList.remove('is-valid', 'is-invalid');
+                    // Ensure placeholder resets for floating labels
+                    input.placeholder = ' '; // This is now redundant but harmless
+                    input.blur();
+                    input.focus();
+                    input.blur();
+                });
+                const errorMessages = document.querySelectorAll('.error-message');
+                errorMessages.forEach(error => {
+                    error.classList.remove('show');
+                    setTimeout(() => {
+                        error.textContent = '';
+                    }, 300);
+                });
+                // Reset password strength meter and toggle icons
+                passwordStrengthBar.style.width = '0%';
+                passwordStrengthBar.classList.remove('weak', 'medium', 'strong');
+                passwordStrengthText.textContent = '';
+                // Removed eye icons reset logic
+                // if (togglePassword) {
+                //     togglePassword.querySelector('i').classList.remove('fa-eye');
+                //     togglePassword.querySelector('i').classList.classList.add('fa-eye-slash');
+                // }
+                // if (toggleConfirmPassword) {
+                //     toggleConfirmPassword.querySelector('i').classList.remove('fa-eye');
+                //     toggleConfirmPassword.querySelector('i').classList.add('fa-eye-slash');
+                // }
+                passwordInput.setAttribute('type', 'password');
+                confirmPasswordInput.setAttribute('type', 'password');
+
+                // Hide all clear buttons and checkmarks after successful submission
+                allClearButtons.forEach(btn => btn.style.display = 'none');
+                allValidCheckmarks.forEach(checkmark => {
+                    checkmark.classList.remove('show');
+                    checkmark.style.display = 'none';
+                });
+                // Removed password toggles hide logic
+                // if (togglePassword) togglePassword.style.display = 'none';
+                // if (toggleConfirmPassword) toggleConfirmPassword.style.display = 'none';
+
+            } else {
+                showMessageBox('Please correct the errors in the form.', 'error');
+                // Ensure password strength is shown if it was valid before submission and then became invalid
+                if (passwordInput.value.length > 0 && !isPasswordValid) {
+                    // Force a re-evaluation of strength display based on current value and error state
+                    passwordStrengthBar.style.width = '0%';
+                    passwordStrengthText.textContent = '';
+                    passwordStrengthBar.classList.remove('weak', 'medium', 'strong');
+                    // Removed password toggle hide logic
+                    // if (togglePassword) togglePassword.style.display = 'none';
+                }
+            }
+        });
+
+        // Initialize state on page load for all interactive elements
+        window.addEventListener('load', () => {
+            createBackgroundParticles();
+
+            allInputs.forEach(input => {
+                input.dispatchEvent(new Event('input'));
+            });
+        });
+    </script>
+</body>
+</html>
